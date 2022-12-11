@@ -1,0 +1,17 @@
+Here are all of the requirements for the gpt3-prompt-to-text script:
+
+The script is written in Python.
+The script uses the OpenAI API key to authenticate with the GPT-3 API.
+The script accepts the following command line arguments:
+prompt: The prompt to convert into text.
+api-key: The OpenAI API key to use.
+engine: The GPT-3 engine to use.
+store: Store the provided parameters in a configuration file.
+tokens: The maximum number of tokens to generate.
+stdin: Read the prompt from stdin instead of from the command line.
+The script has a default value for the engine argument.
+The script uses the provided prompt argument, or reads the prompt from stdin if the --stdin argument is provided, to generate text using the OpenAI GPT-3 API.
+The script can optionally read parameters from a JSON configuration file stored in the user's profile directory.
+The script will use provided command line arguments, or fall back to configuration file values if not provided. Command line arguments will override the configuration file parameters.
+The script prints the generated text to stdout.
+The script is licensed under the MIT License.
