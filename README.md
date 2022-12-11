@@ -1,28 +1,55 @@
-## gpt3-prompt-to-text
-A command line program in Python that can turn a prompt into a text using OpenAI's GPT-3 API.
+# gpt3-prompt-to-text
 
-# Installation
-`pip install gpt3-prompt-to-text`
+A command line program that converts a prompt into text using OpenAI's GPT-3 API.
 
-# Usage
+## Installation
+
 ```
-gpt3-prompt-to-text [-h] [-k API_KEY] [-e ENGINE] [-s] prompt
-
-Convert a prompt into text using OpenAI's GPT-3 API
-
-  -k, --api-key TEXT    The OpenAI API key to use.
-  -e, --engine TEXT     The GPT-3 engine to use.
-  -s, --store           Store the provided parameters in a configuration file.
-  -t, --tokens INTEGER  The maximum number of tokens to generate.
-  --stdin               Read the prompt from stdin instead of from the command line.
-  --help                Show this message and exit.
-  
+pip install gpt3-prompt-to-text
 ```
 
-#Configuration
+## Usage
 
-The api-key and engine parameters can be stored in a JSON configuration file in the user's profile directory. This file is automatically read and sets the parameters when the script is run. The command line arguments override the configuration file parameters.
+```
+gpt3-prompt-to-text [prompt] [-k | --api-key] [-e | --engine] [-s | --store] [-t | --tokens]
+```
 
-#License
+## Options
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+```
+prompt The prompt to convert into text
+-k | --api-key The OpenAI API key to use (default: OpenAI API key in environment)
+-e | --engine The GPT-3 engine to use (default: text-davinci-002)
+-s | --store Store the provided parameters in a configuration file
+-t | --tokens The maximum number of tokens to generate (default: 1024)
+```
+
+### Read prompt from stdin
+
+```
+echo [prompt] | gpt3-prompt-to-text
+```
+
+### Configuration file
+
+The configuration file is stored in the user's profile directory and is named `.gpt3-prompt-to-text-config.json`. It contains the following fields:
+
+```
+{
+"api_key": "The OpenAI API key to use",
+"engine": "The GPT-3 engine to use",
+"tokens": "The maximum number of tokens to generate"
+}
+```
+
+## Development
+
+For information on how to contribute to the project and what prerequisites must be installed, see [DEVELOP.md](DEVELOP.md).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Code of Conduct
+
+This project adheres to the Contributor Covenant Code of Conduct. By participating, you are expected to uphold this code. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details.

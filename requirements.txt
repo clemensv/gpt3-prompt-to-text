@@ -1,0 +1,2 @@
+openai
+setuptools_scm
