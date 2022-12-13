@@ -79,11 +79,10 @@ Write a short story using the default engine and the API key stored in the confi
 gpt3-prompt-to-text "Once upon a time"
 ```
 
-Suppress repeating the input into the output
+Suppress repeating the prompt or input into the output
 
 ```
-gpt3-prompt-to-text --noecho "write a bash statement that prints a cat as ASCII art"
-eval $(gpt3-prompt-to-text --noecho "write a bash statement that prints a cat as ASCII art")
+gpt3-prompt-to-text --noecho "print a cat as ASCII art"
 ```
 
 Control the number of tokens (length of the output)
