@@ -73,16 +73,17 @@ Get help
 gpt3-prompt-to-text -h
 ```
 
-Store the API key for further use
-
-```
-gpt3-prompt-to-text -k [your api key] -s
-```
-
 Write a short story using the default engine and the API key stored in the configuration file
 
 ```
 gpt3-prompt-to-text "Once upon a time"
+```
+
+Suppress repeating the input into the output
+
+```
+gpt3-prompt-to-text --noecho "write a bash statement that prints a cat as ASCII art"
+eval $(gpt3-prompt-to-text --noecho "write a bash statement that prints a cat as ASCII art")
 ```
 
 Control the number of tokens (length of the output)
@@ -107,12 +108,6 @@ Similar to above but use the GPT-3 edit mode
 
 ```
 gpt3-prompt-to-text --edit "Make a dragon appear here:" < myfile.txt
-```
-
-Suppress repeating the input
-
-```
-gpt3-prompt-to-text --prepend "Make a dragon appear here:" --noecho < myfile.txt
 ```
 
 Edit the story file directly with an instruction
