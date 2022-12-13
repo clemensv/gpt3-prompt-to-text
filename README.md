@@ -12,6 +12,10 @@ With Python 3 installed, run
  pip install git+https://github.com/clemensv/gpt3-prompt-to-text.git
 ```
 
+## Sign up for an OpenAI API Key
+
+To use this tool, you need to sign up for an API key at [OpenAI](https://beta.openai.com/).
+
 ## Usage
 
 ```
@@ -25,7 +29,7 @@ gpt3-prompt-to-text [prompt] [-k | --api-key] [-e | --engine] [-s | --store] [-t
 | `prompt` | The prompt to convert into text |
 | `-h, --help` | show this help message and exit |
 | `-k API_KEY, --api-key API_KEY` | The OpenAI API key to use |
-| `-e ENGINE, --engine ENGINE` | The GPT-3 engine to use (e.g. `gpt3-davinci-003` or `ada`) |
+| `-e ENGINE, --engine ENGINE` | The GPT-3 engine to use (e.g. `gpt3-davinci-003` or `ada`). Optional. `gpt3-davinci-003` is the default. |
 | `-s, --store` | Store the provided parameters in a configuration file |
 | `-t TOKENS, --tokens TOKENS` | The maximum number of tokens to generate |
 | `--edit` | Use the edit option. Takes the input to edit from stdin and the prompt from the command line |
