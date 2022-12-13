@@ -1,3 +1,4 @@
+
 import argparse
 import json
 import os
@@ -47,6 +48,12 @@ def create_parser():
         default=1024,
     )
     parser.add_argument(
+        "--temperature",
+        type=float,
+        help="The temperature to use for the output text.",
+        default=0.5,
+    )
+    parser.add_argument(
         "--edit",
         action="store_true",
         help="Use the edit option. Takes the input to edit from stdin and the prompt from the command line",
@@ -62,9 +69,9 @@ def create_parser():
         help="don't echo the input",
     )
     parser.add_argument(
-        "--amend",
+        "--prepend",
         type=str,
-        help="add the amend text to the input (which is read from stdin)",
+        help="prepend this text to the input (which is read from stdin)",
     )
 
 
@@ -113,9 +120,9 @@ def main():
             code = f.read()
             if not args.prompt:
                 if not os.isatty(sys.stdin.fileno()):
-                    if args.amend:
+                    if args.prepend:
                         # Read the prompt from stdin
-                        prompt = args.amend + "\n\n" + sys.stdin.read()
+                        prompt = args.prepend + "\n\n" + sys.stdin.read()
                     else:
                         prompt = sys.stdin.read()
                 else:
@@ -127,7 +134,7 @@ def main():
                 prompt = args.prompt
             code = code.replace("\r\n", "\n")
             
-            completion = get_completion(code, prompt, engine, api_key)
+            completion = get_completion(code, prompt, engine, api_key, args.temperature)
             f.seek(0)
             f.write(completion.choices[0].text)
             f.truncate()
@@ -137,9 +144,9 @@ def main():
     if not args.edit:
         if not args.prompt:
             if not os.isatty(sys.stdin.fileno()):
-                if args.amend:
+                if args.prepend:
                     # Read the prompt from stdin
-                    prompt = args.amend + "\n\n" + sys.stdin.read()
+                    prompt = args.prepend + "\n\n" + sys.stdin.read()
                 else:
                     prompt = sys.stdin.read()
             else:
@@ -160,18 +167,18 @@ def main():
             max_tokens=tokens,
             n=1,
             stop=None,
-            temperature=0.5,
+            temperature=args.temperature,
         )
     else:
         code = sys.stdin.read()
         prompt = args.prompt
         code = code.replace("\r\n", "\n")
         
-        completion = get_completion(code, prompt, engine, api_key)
+        completion = get_completion(code, prompt, engine, api_key, args.temperature)
 
     print(completion.choices[0].text)
 
-def get_completion(code, prompt, engine, api_key):
+def get_completion(code, prompt, engine, api_key, temperature):
     # Use OpenAI's GPT-3 API to convert the prompt into text
     openai.api_key = api_key 
     engine = 'code-davinci-edit-001'
@@ -180,11 +187,10 @@ def get_completion(code, prompt, engine, api_key):
         input=code,
         instruction=prompt,
         n=1,
-        temperature=0.5,
+        temperature=temperature,
     )
 
 
 
 if __name__ == "__main__":
     main()
-
