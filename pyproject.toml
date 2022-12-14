@@ -6,23 +6,20 @@ name = "gpt3-prompt-to-text"
 description = "gpt3-prompt-to-text is a command line program that converts a prompt into text using OpenAI's GPT-3 API."
 readme = "README.md"
 authors = [{name = "Clemens Vasters", email = "clemens@vasters.com"}]
-version = "1.1.1"
+dependencies = [
+  "openai",
+  "setuptools_scm"
+]
+dynamic = ["version"]
 
 [project.urls]
 repository = "https://github.com/clemensv/gpt3-prompt-to-text"
 homepage = "https://github.com/clemensv/gpt3-prompt-to-text"
 
-[tool.setuptools.find_packages]
-include = ["gpt3_prompt_to_text"]
+[tool.setuptools]
+packages = ["gpt3_prompt_to_text"]
 
-[tool.setuptools.entry_points]
-console_scripts = [
-    "gpt3-prompt-to-text = gpt3_prompt_to_text.gpt3_prompt_to_text:main"
-]
+[console_scripts]
+gpt3-prompt-to-text = gpt3_prompt_to_text.gpt3_prompt_to_text:main
 
-[tool.setuptools.install_requires]
-openai = "*"
-setuptools_scm = "*"
-
-[tool.setuptools.setup_requires]
-setuptools_scm = "*"
+[tool.setuptools_scm]
