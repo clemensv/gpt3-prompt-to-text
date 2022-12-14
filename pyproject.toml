@@ -6,6 +6,8 @@ name = "gpt3-prompt-to-text"
 description = "gpt3-prompt-to-text is a command line program that converts a prompt into text using OpenAI's GPT-3 API."
 readme = "README.md"
 authors = [{name = "Clemens Vasters", email = "clemens@vasters.com"}]
+
+[project.urls]
 repository = "https://github.com/clemensv/gpt3-prompt-to-text"
 homepage = "https://github.com/clemensv/gpt3-prompt-to-text"
 
