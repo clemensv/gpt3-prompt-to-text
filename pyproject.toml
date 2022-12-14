@@ -3,7 +3,7 @@ requires = ["setuptools>=40.8.0", "wheel"]
 
 [tool.setuptools]
 name = "gpt3-prompt-to-text"
-use_scm_version = True
+use_scm_version = true
 
 [tool.setuptools.find_packages]
 include = ["gpt3_prompt_to_text"]
