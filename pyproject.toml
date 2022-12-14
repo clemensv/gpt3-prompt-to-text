@@ -1,3 +1,8 @@
+[tool.poetry]
+name = "gpt3-prompt-to-text"
+description = "gpt3-prompt-to-text is a command line program that converts a prompt into text using OpenAI's GPT-3 API."
+license = "MIT"
+
 [build-system]
 requires = ["setuptools>=40.8.0", "wheel"]
 
