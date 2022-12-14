@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+
+[tool.setuptools]
+name = "gpt3-prompt-to-text"
+use_scm_version = True
+
+[tool.setuptools.find_packages]
+include = ["gpt3_prompt_to_text"]
+
+[tool.setuptools.entry_points]
+console_scripts = [
+    "gpt3-prompt-to-text = gpt3_prompt_to_text.gpt3_prompt_to_text:main"
+]
+
+[tool.setuptools.install_requires]
+openai = "*"
+setuptools_scm = "*"
+
+[tool.setuptools.setup_requires]
+setuptools_scm = "*"
