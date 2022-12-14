@@ -1,10 +1,14 @@
-[tool.poetry]
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+
+[project]
 name = "gpt3-prompt-to-text"
 description = "gpt3-prompt-to-text is a command line program that converts a prompt into text using OpenAI's GPT-3 API."
 license = "MIT"
-
-[build-system]
-requires = ["setuptools>=40.8.0", "wheel"]
+readme = "README.md"
+authors = ["Clemens Vasters <clemens@vasters.com>"]
+repository = "https://github.com/clemensv/gpt3-prompt-to-text"
+homepage = "https://github.com/clemensv/gpt3-prompt-to-text"
 
 [tool.setuptools]
 name = "gpt3-prompt-to-text"
