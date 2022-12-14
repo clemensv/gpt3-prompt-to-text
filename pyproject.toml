@@ -12,9 +12,6 @@ version = "1.1.1"
 repository = "https://github.com/clemensv/gpt3-prompt-to-text"
 homepage = "https://github.com/clemensv/gpt3-prompt-to-text"
 
-[tool.setuptools]
-name = "gpt3-prompt-to-text"
-
 [tool.setuptools.find_packages]
 include = ["gpt3_prompt_to_text"]
 
