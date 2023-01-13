@@ -81,6 +81,11 @@ def create_parser():
         help="don't echo the input",
     )
     parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="more verbose output",
+    )
+    parser.add_argument(
         "--show-deployments",
         action="store_true",
         help="show deployments in Azure OpenAI",
@@ -207,11 +212,14 @@ def main():
         
         completion = get_completion(code, prompt, args.completions, engine, api_key, args.temperature)
 
-    print(f"Completed in {completion.response_ms} ms, {len(completion.choices)} choices:")
+    if args.verbose:
+        print(f"Completed in {completion.response_ms} ms, {len(completion.choices)} choices:")
     for index, choice in enumerate(completion.choices):
-        print(f"-- {index+1} --------------------------------")   
+        if args.verbose:
+            print(f"-- {index+1} --------------------------------")   
         print(choice.text)
-    print("-------------------------------------------")
+    if args.verbose:
+        print("-------------------------------------------")
 
 def get_completion(code, prompt, completions, engine, api_key, temperature):
     # Use OpenAI's GPT-3 API to convert the prompt into text
