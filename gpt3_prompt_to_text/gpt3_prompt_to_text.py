@@ -5,10 +5,10 @@ import os
 import sys
 from openai import api_key
 import openai 
-
+import requests
 
 DEFAULT_CONFIG_FILE_NAME = ".gpt3-prompt-to-text-config.json"
-DEFAULT_ENGINE = "text-davinci-003"
+DEFAULT_ENGINE = "text-davinci-002"
 
 def create_parser():
     parser = argparse.ArgumentParser(
@@ -19,6 +19,12 @@ def create_parser():
         type=str,
         nargs="?",
         help="The prompt to convert into text. If not provided, the prompt will be read from stdin.",
+    )
+    parser.add_argument(
+        "--endpoint",
+        type=str,
+        help="The OpenAI endpoint to use",
+        default=None,
     )
     parser.add_argument(
         "-k",
@@ -69,6 +75,11 @@ def create_parser():
         help="don't echo the input",
     )
     parser.add_argument(
+        "--show-deployments",
+        action="store_true",
+        help="show deployments in Azure OpenAI",
+    )
+    parser.add_argument(
         "--prepend",
         type=str,
         help="prepend this text to the input (which is read from stdin)",
@@ -107,13 +118,27 @@ def main():
     api_key = args.api_key or config.get("api_key")
     engine = args.engine or config.get("engine")
     tokens = args.tokens or config.get("tokens")
+    endpoint = args.endpoint or config.get("endpoint")
 
     
     if args.store:
         # Store provided parameters in configuration file
-        store_config({"api_key": api_key, "engine": engine, "tokens": tokens})
+        store_config({"api_key": api_key, "engine": engine, "tokens": tokens, "endpoint" : endpoint })
         return
 
+     # Use OpenAI's GPT-3 API to convert the prompt into text
+    openai.api_key = api_key 
+    if endpoint:
+        openai.api_base = endpoint 
+        if endpoint.find("azure.com") > -1:
+            openai.api_type = "azure"
+            openai.api_version = "2022-12-01"
+
+    if args.show_deployments:
+        url = openai.api_base + "/openai/deployments?api-version=" + openai.api_version
+        r = requests.get(url, headers={"api-key": api_key})
+        print(r.text)
+        return
 
     if args.edit_file:
         with open(args.edit_file, 'r+') as f:
@@ -159,8 +184,8 @@ def main():
         if not args.noecho:
           print(prompt)
 
-        # Use OpenAI's GPT-3 API to convert the prompt into text
-        openai.api_key = api_key 
+       
+    
         completion = openai.Completion.create(
             engine=engine,
             prompt=prompt,
