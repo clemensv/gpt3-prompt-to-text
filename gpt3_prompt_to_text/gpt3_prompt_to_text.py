@@ -60,6 +60,12 @@ def create_parser():
         default=0.5,
     )
     parser.add_argument(
+        "--completions",
+        type=int,
+        help="The number of completions to generate.",
+        default=1,
+    )
+    parser.add_argument(
         "--edit",
         action="store_true",
         help="Use the edit option. Takes the input to edit from stdin and the prompt from the command line",
@@ -190,7 +196,7 @@ def main():
             engine=engine,
             prompt=prompt,
             max_tokens=tokens,
-            n=1,
+            n=args.completions,
             stop=None,
             temperature=args.temperature,
         )
@@ -199,11 +205,15 @@ def main():
         prompt = args.prompt
         code = code.replace("\r\n", "\n")
         
-        completion = get_completion(code, prompt, engine, api_key, args.temperature)
+        completion = get_completion(code, prompt, args.completions, engine, api_key, args.temperature)
 
-    print(completion.choices[0].text)
+    print(f"Completed in {completion.response_ms} ms, {len(completion.choices)} choices:")
+    for index, choice in enumerate(completion.choices):
+        print(f"-- {index+1} --------------------------------")   
+        print(choice.text)
+    print("-------------------------------------------")
 
-def get_completion(code, prompt, engine, api_key, temperature):
+def get_completion(code, prompt, completions, engine, api_key, temperature):
     # Use OpenAI's GPT-3 API to convert the prompt into text
     openai.api_key = api_key 
     engine = 'code-davinci-edit-001'
@@ -211,7 +221,7 @@ def get_completion(code, prompt, engine, api_key, temperature):
         model=engine,
         input=code,
         instruction=prompt,
-        n=1,
+        n=completions,
         temperature=temperature,
     )
 
