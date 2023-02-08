@@ -34,6 +34,8 @@ gpt3-prompt-to-text [prompt] [-k | --api-key] [-e | --engine] [-s | --store] [-t
 | `-t TOKENS, --tokens TOKENS` | The maximum number of tokens to generate |
 | `--edit` | Use the edit option. Takes the input to edit from stdin and the prompt from the command line |
 | `--edit-file EDIT_FILE` | Use the edit option. Takes the input to edit from a file and the prompt from the command line. Writes the output back to the file. |
+| `--endpoint` | The OpenAI endpoint to use. Optional. Defaults to `https://api.openai.com/v1/engines`. |
+| `--show-deployments` | Show model deployments when running in Azure OpenAI |
 | `--noecho` | don't echo the input |
 | `--prepend PREPEND` | add the prepend text to the input (which is read from stdin) |
 
