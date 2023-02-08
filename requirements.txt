@@ -1,2 +1,2 @@
-openai
-setuptools_scm
+openai>=0.26.5
+flit>=3.8.0
