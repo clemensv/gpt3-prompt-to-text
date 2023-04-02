@@ -140,9 +140,34 @@ def main():
         print(r.text)
         return
 
-    if args.edit_file:
-        with open(args.edit_file, 'r+') as f:
-            code = f.read()
+    try:
+        if args.edit_file:
+            with open(args.edit_file, 'r+') as f:
+                code = f.read()
+                if not args.prompt:
+                    if not os.isatty(sys.stdin.fileno()):
+                        if args.prepend:
+                            # Read the prompt from stdin
+                            prompt = args.prepend + "\n\n" + sys.stdin.read()
+                        else:
+                            prompt = sys.stdin.read()
+                    else:
+                        parser.print_help()
+                        exit()
+                    prompt = prompt.replace("\r\n", "\n")
+                else:
+                    # Set the prompt to the input prompt
+                    prompt = args.prompt
+                code = code.replace("\r\n", "\n")
+                
+                completion = get_completion(code, prompt, engine, api_key, args.temperature)
+                f.seek(0)
+                f.write(completion.choices[0].text)
+                f.truncate()
+                f.close()
+            return
+
+        if not args.edit:
             if not args.prompt:
                 if not os.isatty(sys.stdin.fileno()):
                     if args.prepend:
@@ -153,55 +178,32 @@ def main():
                 else:
                     parser.print_help()
                     exit()
-                prompt = prompt.replace("\r\n", "\n")
             else:
-                # Set the prompt to the input prompt
+                # Use the provided prompt
                 prompt = args.prompt
+            prompt = prompt.replace("\r\n", "\n")
+            if not args.noecho:
+                print(prompt)
+        
+        
+            completion = openai.Completion.create(
+                engine=engine,
+                prompt=prompt,
+                max_tokens=tokens,
+                n=1,
+                stop=None,
+                temperature=args.temperature,
+            )
+        else:
+            code = sys.stdin.read()
+            prompt = args.prompt
             code = code.replace("\r\n", "\n")
             
             completion = get_completion(code, prompt, engine, api_key, args.temperature)
-            f.seek(0)
-            f.write(completion.choices[0].text)
-            f.truncate()
-            f.close()
-        return
 
-    if not args.edit:
-        if not args.prompt:
-            if not os.isatty(sys.stdin.fileno()):
-                if args.prepend:
-                    # Read the prompt from stdin
-                    prompt = args.prepend + "\n\n" + sys.stdin.read()
-                else:
-                    prompt = sys.stdin.read()
-            else:
-                parser.print_help()
-                exit()
-        else:
-            # Use the provided prompt
-            prompt = args.prompt
-        prompt = prompt.replace("\r\n", "\n")
-        if not args.noecho:
-          print(prompt)
-
-       
-    
-        completion = openai.Completion.create(
-            engine=engine,
-            prompt=prompt,
-            max_tokens=tokens,
-            n=1,
-            stop=None,
-            temperature=args.temperature,
-        )
-    else:
-        code = sys.stdin.read()
-        prompt = args.prompt
-        code = code.replace("\r\n", "\n")
-        
-        completion = get_completion(code, prompt, engine, api_key, args.temperature)
-
-    print(completion.choices[0].text)
+        print(completion.choices[0].text)
+    except openai.InvalidRequestError(message, param):
+        print(message, param)
 
 def get_completion(code, prompt, engine, api_key, temperature):
     # Use OpenAI's GPT-3 API to convert the prompt into text
