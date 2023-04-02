@@ -60,6 +60,12 @@ def create_parser():
         default=0.5,
     )
     parser.add_argument(
+        "--completions",
+        type=int,
+        help="The number of completions to generate.",
+        default=1,
+    )
+    parser.add_argument(
         "--edit",
         action="store_true",
         help="Use the edit option. Takes the input to edit from stdin and the prompt from the command line",
@@ -73,6 +79,11 @@ def create_parser():
         "--noecho",
         action="store_true",
         help="don't echo the input",
+    )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="more verbose output",
     )
     parser.add_argument(
         "--show-deployments",
@@ -200,12 +211,57 @@ def main():
             code = code.replace("\r\n", "\n")
             
             completion = get_completion(code, prompt, engine, api_key, args.temperature)
+            f.seek(0)
+            f.write(completion.choices[0].text)
+            f.truncate()
+            f.close()
+        return
 
-        print(completion.choices[0].text)
-    except openai.InvalidRequestError(message, param):
-        print(message, param)
+    if not args.edit:
+        if not args.prompt:
+            if not os.isatty(sys.stdin.fileno()):
+                if args.prepend:
+                    # Read the prompt from stdin
+                    prompt = args.prepend + "\n\n" + sys.stdin.read()
+                else:
+                    prompt = sys.stdin.read()
+            else:
+                parser.print_help()
+                exit()
+        else:
+            # Use the provided prompt
+            prompt = args.prompt
+        prompt = prompt.replace("\r\n", "\n")
+        if not args.noecho:
+          print(prompt)
 
-def get_completion(code, prompt, engine, api_key, temperature):
+       
+    
+        completion = openai.Completion.create(
+            engine=engine,
+            prompt=prompt,
+            max_tokens=tokens,
+            n=args.completions,
+            stop=None,
+            temperature=args.temperature,
+        )
+    else:
+        code = sys.stdin.read()
+        prompt = args.prompt
+        code = code.replace("\r\n", "\n")
+        
+        completion = get_completion(code, prompt, args.completions, engine, api_key, args.temperature)
+
+    if args.verbose:
+        print(f"Completed in {completion.response_ms} ms, {len(completion.choices)} choices:")
+    for index, choice in enumerate(completion.choices):
+        if args.verbose:
+            print(f"-- {index+1} --------------------------------")   
+        print(choice.text)
+    if args.verbose:
+        print("-------------------------------------------")
+
+def get_completion(code, prompt, completions, engine, api_key, temperature):
     # Use OpenAI's GPT-3 API to convert the prompt into text
     openai.api_key = api_key 
     engine = 'code-davinci-edit-001'
@@ -213,7 +269,7 @@ def get_completion(code, prompt, engine, api_key, temperature):
         model=engine,
         input=code,
         instruction=prompt,
-        n=1,
+        n=completions,
         temperature=temperature,
     )
 

@@ -1,0 +1,27 @@
+[build-system]
+build-backend = "flit_scm:buildapi"
+requires = ["flit_scm"]
+
+[project]
+name = "gpt3-prompt-to-text"
+dynamic = ["version"]
+authors = [
+    { name = "Clemens Vasters", email = "clemens@vasters.com"}
+]
+description = "A trivial command line tool to invoke OpenAI's completion API"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "openai>=0.26.5"
+]
+
+[project.scripts]
+gpt3-prompt-to-text = "gpt3_prompt_to_text.gpt3_prompt_to_text:main"
+
+[tool.setuptools_scm]
+write_to = "gpt3_prompt_to_text/_version.py"
